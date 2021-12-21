@@ -37,7 +37,7 @@ def counter(func):
 
 @counter
 >>>>>>> master
-def downloader(token):
+def updater(token):
     df = pd.DataFrame()
     i = 1
     start_date = data.iloc[-1].datum.strftime("%d.%m.%Y")

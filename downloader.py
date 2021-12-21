@@ -22,7 +22,7 @@ def request(url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=1&datum
 r = request(url, params)
 
 
-def get_data(token):
+def downloader(token):
     df = pd.DataFrame()
     i = 1
     while True:
