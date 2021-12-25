@@ -13,8 +13,6 @@ token = "e2f053218f417ccbeb07a1e284d32dc1"
 r = requests.get(url, params = {"apiToken": token})
 r
 
-<<<<<<< HEAD
-=======
 #ount = 0
 #def counter():
     #global count
@@ -27,16 +25,18 @@ def counter(func):
     if wrapper.count == 999:
         time.sleep(3600)
         wrapper.count = 0
-    else:     
-    # Call the function being decorated and return the result
-    return func(*args, **kwargs)
+        return func(*args, **kwargs)
+    else:   
+        return func(*args, **kwargs)  
   wrapper.count = 0
   # Return the new decorated function
   return wrapper
 
 
+#Need to load data
+data = pd.read_parquet('example_fp.gzip', engine='fastparquet')
+
 @counter
->>>>>>> master
 def updater(token):
     df = pd.DataFrame()
     i = 1

@@ -1,3 +1,6 @@
+import requests 
+import time
+import pandas as pd
 
 def counter(func):
   def wrapper(*args, **kwargs):
@@ -16,10 +19,9 @@ def counter(func):
 
 token = "8a0ff681501b0bac557bf90fe6a036f7"
 @counter
-def request(url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=1&datum%5Bbefore%5D=01.01.2021&datum%5Bafter%5D=01.01.2020" , params =  {"apiToken": token}):
-            r = requests.get(url, params)
+def request(url, token):
+            r = requests.get(url, {"apiToken": token})
             return r 
-r = request(url, params)
 
 
 def downloader(token):
@@ -27,7 +29,7 @@ def downloader(token):
     i = 1
     while True:
         url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=" + str(i) +"&datum%5Bbefore%5D=01.01.2021&datum%5Bafter%5D=01.01.2020"
-        r = request()
+        r = request(url, token)
         if r.status_code == 429:
             print("code 429: " + str(i))
             msg = r.json()["message"]
