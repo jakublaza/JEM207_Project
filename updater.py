@@ -37,7 +37,7 @@ def counter(func):
 data = pd.read_parquet('example_fp.gzip', engine='fastparquet')
 
 @counter
-def updater(token):
+def updater(token, date):
     df = pd.DataFrame()
     i = 1
     start_date = data.iloc[-1].datum.strftime("%d.%m.%Y")
