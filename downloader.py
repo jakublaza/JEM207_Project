@@ -7,41 +7,49 @@ def counter(func):
     wrapper.count += 1
     if wrapper.count == 999:
         print("Counter on 999!")
-        time.sleep(3600)
-        wrapper.count = 0
-        return func(*args, **kwargs)
+        try:
+            msg = wrapper.json()["message"]
+            print(msg)
+            t = "".join(a for a in msg if a.isdigit())
+            time.sleep(t+60)
+            wrapper.count = 1
+            return func(*args, **kwargs)
+        except:
+            time.sleep(3000)
+            wrapper.count = 1
+            return func(*args, **kwargs)
     else:     
     # Call the function being decorated and return the result
         return func(*args, **kwargs)
-  wrapper.count = 0
+  wrapper.count = 1
   # Return the new decorated function
   return wrapper
 
-token = "8a0ff681501b0bac557bf90fe6a036f7"
+token = "e2f053218f417ccbeb07a1e284d32dc1"
 @counter
 def request(url, token):
             r = requests.get(url, {"apiToken": token})
             return r 
 
 
-def downloader(token):
+def downloader(token, start_page = 0):
     df = pd.DataFrame()
-    i = 1
-    while True:
-        url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=" + str(i) +"&datum%5Bbefore%5D=01.01.2021&datum%5Bafter%5D=01.01.2020"
+    url_0 = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=1&itemsPerPage=1000&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
+    req = request(url_0, token)
+    pages_total = int(req.json()["hydra:view"]["hydra:last"].split("=")[-1])
+    for i in range(start_page, pages_total+1):
+        url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page="+ str(i) +"&itemsPerPage=1000&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
         r = request(url, token)
-        if r.status_code == 429:
-            print("code 429: " + str(i))
-            msg = r.json()["message"]
-            t = "".join(a for a in msg if a.isdigit())
-            print(t)
-            break
-            #time.sleep(int(t))
-            #r = requests.get(url, params = {"apiToken": token})
-        if len(r.json()["hydra:member"]) != 0:
+        if r.status_code == 200:
             df = df.append(pd.DataFrame.from_dict(r.json()["hydra:member"]))
         else:
-            print(i)
+            print(r.status_code)
+            print(r.text)
+            print("Stopped on page: " + str(i))
             break
-        i += 1
+        if i % 50 == 0:
+            print("Currently on page " + str(i) + ". Progress: " + str(round(i/(pages_total+1)*100,1)) + " %.", end='\r')
+        if i % 100 == 0:
+             df.to_parquet('data3.gzip'.format(a = i),compression='gzip')
     return df
+data = downloader(token, start_page = 2012)
