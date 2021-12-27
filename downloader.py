@@ -23,7 +23,7 @@ def request(url, token):
             return r 
 
 def get_total_pages(token):
-    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=1&itemsPerPage=1000&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
+    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=1&itemsPerPage=1500&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
     r = request(url, token)
     total_pages = int(r.json()["hydra:view"]["hydra:last"].split("=")[-1])
     return total_pages
@@ -35,10 +35,13 @@ def downloader(token, start_page = 1):
         df = pd.read_parquet('data.gzip', engine='fastparquet')
     pages_total = get_total_pages(token)
     for i in range(start_page, pages_total+1):
-        url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page="+ str(i) +"&itemsPerPage=1000&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
+        url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page="+ str(i) +"&itemsPerPage=2000&datum%5Bbefore%5D=24.12.2021&datum%5Bafter%5D=1.1.2020"
         r = request(url, token)
         if r.status_code == 200:
             df = df.append(pd.DataFrame.from_dict(r.json()["hydra:member"]))
+            while df.duplicated.sum() != 0:
+                r = request(url, token)
+                df = df.append(pd.DataFrame.from_dict(r.json()["hydra:member"]))
         elif r.status_code == 429:
             msg = r.json()["message"]
             t = "".join(a for a in msg if a.isdigit())
@@ -58,6 +61,6 @@ def downloader(token, start_page = 1):
              df.to_parquet('data.gzip'.format(a = i),compression='gzip')
     print("DONE")
     return df
-
-df.to_parquet('data.gzip'.format(a = i),compression='gzip')
+data = downloader(token)
+data.to_parquet('data.gzip'.format(a = i),compression='gzip')
 
