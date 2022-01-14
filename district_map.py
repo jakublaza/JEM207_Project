@@ -10,7 +10,7 @@ regions = geopandas.read_file(link_reg)
 
 prague = regions.iloc[5]
 
-#### We preforme some adjustments so the merge with covid data is smooth. We will be merging on column "district_code" 
+#### We performe some adjustments so the merge with covid data is smooth. We will be merging on column "district_code" 
 
 prague = prague.drop(labels = ["REG_LABEL", "ANND"]).rename({"SHN1":"district_code"})
 
