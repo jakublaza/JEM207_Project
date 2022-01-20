@@ -7,10 +7,10 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import unicodedata
 
-link_dist = "/Users/Jakub/Downloads/BND/PolbndDistDA.shp"
+link_dist = "/Users/Jakub/Desktop/PP/BND/PolbndDistDA.shp"
 districts = geopandas.read_file(link_dist)
 
-link_reg = "/Users/Jakub/Downloads/BND/PolbndRegDA.shp"
+link_reg = "/Users/Jakub/Desktop/PP/BND/PolbndRegDA.shp"
 regions = geopandas.read_file(link_reg)
 
 prague = regions.iloc[5]
@@ -27,6 +27,6 @@ for i in range(78):
     districts["district_code"][i] = districts["district_code"][i][:6]
 
 
-data = districts.merge(df, left_on = "NAMN", right_index = True, how = "left")
-print(data)
+#data = districts.merge(df, left_on = "NAMN", right_index = True, how = "left")
+#print(data)
 print(districts)
