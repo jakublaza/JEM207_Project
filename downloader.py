@@ -40,6 +40,7 @@ def request(token, page = 1, items_per_page = 5000):
             print("Holy Moly! You exceeded the requests limit per hour, now you need to wait " + t + " seconds...")
             time.sleep(int(t)+60)
             request.count = 1
+            start = time.time()
             r = request(token, page)
         else:
             raise KeyError("Status code: " + r.status_code, "Error message: " + r.text, "Stopped on page: " + str(page))
@@ -127,20 +128,23 @@ def downloader(token, start_page = 1):
             print("miss values:", miss_values, "duplicates:", duplicates)
         if i % 50 == 0:
             prev_df_len = len(df) - 30000 + prev_df_len
-            df.to_parquet('data{a}.gzip'.format(a = int(i/50) + 1), compression='gzip')
+            df.to_parquet('data{a}.gzip'.format(a = int(i/50) + 1), compression='snappy')
             df = pd.read_parquet('data{a}.gzip'.format(a = int(i/50) + 1), engine='fastparquet').iloc[-30000:] 
             print(len(df), prev_df_len, i * 50 > 250000)
             pdf = 30000
             print(P)
         #print(i*5000, prev_df_len, len(df))
-    df.to_parquet('data{a}.gzip'.format(a = "last"), compression='gzip')
+    df.to_parquet('data{a}.gzip'.format(a = "last"), compression='snappy')
     L = list(range(2, int(pages_total/50) + 1))
     L.append(str("last"))
-    data = pd.read_parquet('data1.gzip', engine='fastparquet')
+    data = pd.read_parquet('data1.gzip', engine='snappy')
     for j in L:
         data = data.merge(pd.read_parquet('data{a}.gzip'.format(a = j), engine='fastparquet'), how = "outer")
-        #cwd = os.getcwd()
-        #os.remove(cwd + "/data{a}.gzip".format(a = j))
+        try:
+            cwd = os.getcwd()
+            os.remove(cwd + "/data{a}.gzip".format(a = j))
+        except:
+            None
     data.to_parquet('dataz.gzip', compression='gzip')
     return data
 
