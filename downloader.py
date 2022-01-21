@@ -5,7 +5,6 @@ import sys
 import os
 import io
 
-
 token = "e2f053218f417ccbeb07a1e284d32dc1"
 #e2f053218f417ccbeb07a1e284d32dc1
 #8a0ff681501b0bac557bf90fe6a036f7
@@ -145,7 +144,7 @@ def downloader(token, start_page = 1):
             os.remove(cwd + "/data{a}.gzip".format(a = j))
         except:
             None
-    data.to_parquet('dataz.gzip', compression='gzip')
+    data.to_parquet('datafinal.gzip', compression='gzip')
     return data
 
 dataset = downloader(token, start_page = 1)
