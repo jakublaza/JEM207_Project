@@ -5,7 +5,7 @@ import sys
 import os
 import io
 
-token = "e2f053218f417ccbeb07a1e284d32dc1"
+token = "8a0ff681501b0bac557bf90fe6a036f7"
 #e2f053218f417ccbeb07a1e284d32dc1
 #8a0ff681501b0bac557bf90fe6a036f7
 
@@ -64,17 +64,15 @@ def get_vacination():
     csv_df.to_parquet('dataz.gzip',compression='gzip')
     return csv_df
 
-def duplicates_handling(duplicates, df, miss_values, prev_df_len, i, P, pdf):
+def duplicates_handling(df, i, P, pdf):
     duplicates = pdf + 10000 - len(df) 
     print("duplicates: ", duplicates)
-    duplicates_handling.miss_values = miss_values
     if duplicates > 0:
         print("Handling duplicates...")
         m = 1 # defiend to prevent infinite while loop
         while duplicates > 0: #should handle missing values due to duplicates
             if m == 8:
                 print("unsuccesful", i)
-                duplicates_handling.miss_values +=  duplicates
                 P[i] = duplicates
                 break                       
             elif m % 2 == 0:
@@ -92,63 +90,64 @@ def duplicates_handling(duplicates, df, miss_values, prev_df_len, i, P, pdf):
             m += 1
         if m < 5:
             print("Solved!")
-            duplicates_handling.miss_values += duplicates
+            P[i] = duplicates
     return df   
+
+def saving_interim_results(df, i):
+    df.to_parquet('data{a}.parquet'.format(a = int(i/50)), compression = 'snappy')
+    df = pd.read_parquet('data{a}.parquet'.format(a = int(i/50)), engine = 'fastparquet').iloc[-30000:] 
+    return df
+    
+def merging_interim_results(pages_total):
+    L = list(range(2, int(pages_total/50) + 2))
+    data = pd.read_parquet('data1.parquet', engine = 'fastparquet')
+    for j in L:
+        data = data.merge(pd.read_parquet('data{a}.parquet'.format(a = j), engine = 'fastparquet'), how = "outer")
+        try:
+            cwd = os.getcwd()
+            os.remove(cwd + "/data{a}.parquet".format(a = j))
+        except:
+            None
+    data.to_parquet('datafinal.gzip', compression = 'gzip')
+    return data
+
 
 def downloader(token, start_page = 1):
     if start_page == 1:
         r_0 = request(token, start_page)
         df = pd.DataFrame.from_dict(r_0.json()["hydra:member"])
-        prev_df_len = 0
+        total_len = len(df)
+        pdf = 0
     else:
-        start_page = int(start_page/50) * 50 + 1
-        df = pd.read_parquet('data1.gzip', engine='fastparquet') #estabilis df, on which will be the merge preformed
-        for k in range(2, int(start_page/50)+1):
-            df = df.merge(pd.read_parquet('data{a}.gzip'.format(a = k), engine='fastparquet'), how = "outer")
-        prev_df_len = len(df)
-        print(prev_df_len)
-        df = pd.read_parquet('data{a}.gzip'.format(a = int(start_page/50)), engine='fastparquet').iloc[-30000:]
+        start_page = int(start_page/50) * 50 
+        df = pd.read_parquet('data1.parquet', engine='fastparquet') #estabilis df, on which will be the merge preformed
+        for k in range(1, int(start_page/50) + 1):
+            df = df.merge(pd.read_parquet('data{a}.parquet'.format(a = k), engine = 'fastparquet'), how = "outer").drop_duplicates()
+        pr_total_len = len(df) - int(start_page/50) * 50 * 5000
+        df = df.iloc[-30000:]
+        pdf = len(df)
     pages_total = get_total_pages(token)
     items_total = get_total_items(token)
-    duplicates = 0
-    miss_values = 0
     P = {1 : 0}
-    pdf = 0
     for i in range(start_page + 1, pages_total + 1):
         r = request(token, i)
         df = df.merge(pd.DataFrame.from_dict(r.json()["hydra:member"]), how = "outer").drop_duplicates()
         if i % 2 == 0 or i == pages_total:
-            print(prev_df_len, len(df), i * 5000)
-            #os.system('clear')
-            print("Currently on page " + str(i) + ". Progress: " + str(round((prev_df_len + len(df))/(r_0.json()['hydra:totalItems'])*100,1)) + " %.")
-            df = duplicates_handling(duplicates, df, miss_values, prev_df_len, i, P, pdf)
-            pdf = len(df) 
-            miss_values = duplicates_handling.miss_values
-            print("miss values:", miss_values, "duplicates:", duplicates)
+            df = duplicates_handling(df, i, P, pdf) 
+            total_len = i * 5000 - sum(P.values()) + pr_total_len
+            print("Currently on page " + str(i) + ". Progress: " + str(round((total_len/items_total) * 100, 1)) + " %.") 
+            print(total_len, i*5000, len(df))
+            pdf = len(df)
         if i % 50 == 0:
-            prev_df_len = len(df) - 30000 + prev_df_len
-            df.to_parquet('data{a}.gzip'.format(a = int(i/50) + 1), compression='snappy')
-            df = pd.read_parquet('data{a}.gzip'.format(a = int(i/50) + 1), engine='fastparquet').iloc[-30000:] 
-            print(len(df), prev_df_len, i * 50 > 250000)
+            df = saving_interim_results(df, i)
             pdf = 30000
+            print(len(df), i * 5000,  "ahead/behind: " + str(total_len - i*5000))
             print(P)
-        #print(i*5000, prev_df_len, len(df))
-    df.to_parquet('data{a}.gzip'.format(a = "last"), compression='snappy')
-    L = list(range(2, int(pages_total/50) + 1))
-    L.append(str("last"))
-    data = pd.read_parquet('data1.gzip', engine='snappy')
-    for j in L:
-        data = data.merge(pd.read_parquet('data{a}.gzip'.format(a = j), engine='fastparquet'), how = "outer")
-        try:
-            cwd = os.getcwd()
-            os.remove(cwd + "/data{a}.gzip".format(a = j))
-        except:
-            None
-    data.to_parquet('datafinal.gzip', compression='gzip')
+    df.to_parquet('data{a}.parquet'.format(a = int(i/50)+1), compression = 'snappy')
+    data = merging_interim_results(pages_total)
     return data
 
-dataset = downloader(token, start_page = 1)
-dataset.to_parquet('data_final.gzip', compression='gzip')
+dataset = downloader(token, start_page = 460)
 
 
 
