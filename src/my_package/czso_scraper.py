@@ -2,6 +2,12 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import unicodedata
+from downloader import *
+from district_map import districts
+
+token = "8a0ff681501b0bac557bf90fe6a036f7"
+
+r = request(token)
 
 
 url = "https://vdb.czso.cz/vdbvo2/faces/index.jsf?page=vystup-objekt&z=T&f=TABULKA&katalog=33115&pvo=DEMD130062-1-4&c=v3~11__RP2021QP1"
@@ -23,4 +29,3 @@ df.columns = ['Total', 'Men', 'Women']
 
 data = districts.merge(df, left_on = "NAMN", right_index = True, how = "left")
 print(data)
-print(districts)

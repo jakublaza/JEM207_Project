@@ -1,11 +1,13 @@
-""" Obtaining data for map of districs of the Czech Republic, given that Prague is officially not a district, but a region. We download data for Prague from region database and add them to districts
- Hence we treat Prague as a district. 
-"""
+
 import geopandas
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import unicodedata
+
+""" Obtaining data for map of districs of the Czech Republic, given that Prague is officially not a district, but a region. We download data for Prague from region database and add them to districts
+ Hence we treat Prague as a district. 
+"""
 
 link_dist = "/Users/Jakub/Desktop/PP/BND/PolbndDistDA.shp"
 districts = geopandas.read_file(link_dist)

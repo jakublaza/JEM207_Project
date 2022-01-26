@@ -6,7 +6,7 @@ import time
 from datetime import date
 import fastparquet
 
-from downloader import get_total_items
+
 
 i = 1
 url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page=" + str(i) +"&datum%5Bbefore%5D=01.01.2021&datum%5Bafter%5D=01.01.2020"

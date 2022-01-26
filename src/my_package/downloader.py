@@ -13,8 +13,8 @@ token = "8a0ff681501b0bac557bf90fe6a036f7"
 
 def counter(func):
   """A decorator that counts how many times we executed a funciton.
-  In our case we uuse it ot track how many times we executed request()
-  to do not exceed API 1000resuests/hour limit. When we aproach
+  In our case we use it to track how many times we executed request()
+  to do not exceed API 1000 requests/hour limit. When we aproach
   the limit functino automatically time sleeps.   
   """
   @wraps(func)  
@@ -273,7 +273,8 @@ class Covid_Data:
     total_pages : int
         information regarding how pages needs to be requested from API (loads by calling method get_page(token, items_per_page = 5000))
     my_page : int
-        states on what page is your data set, helpful when only fraction of data were donwloaded (loads by calling method get_page(token, items_per_page = 5000))
+        states on what page is your data set, helpful when only fraction of data were donwloaded 
+        (loads by calling method get_page(token, items_per_page = 5000))
 
     Methods
     -------
@@ -300,7 +301,7 @@ class Covid_Data:
                      "start_date": [],
                      "end_date": []}
 
-        if type(self.data) == int:
+        if isinstance(self.data, int):
             print("No data loaded or downloaded.")
         else:
             print("The provided data were loaded.")
@@ -410,7 +411,7 @@ class Covid_Data:
         end_date : str, datetime
             until what date you want to update the date (default date.today())
         """
-        if type(end_date) == str:
+        if isinstance(end_date, str):
             try:
                 end_date_dtformat = datetime.strptime(end_date, "%d.%m.%Y")
                 print("updating...")
@@ -432,6 +433,6 @@ class Covid_Data:
         self.get_info()
     
 
-covid = Covid_Data()
+#covid = Covid_Data()
 
-covid.downloader(token)
+#covid.downloader(token)
