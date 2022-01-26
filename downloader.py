@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import date, datetime
+from functools import wraps
 import requests 
 import time
 import sys
@@ -11,6 +12,12 @@ token = "8a0ff681501b0bac557bf90fe6a036f7"
 #8a0ff681501b0bac557bf90fe6a036f7
 
 def counter(func):
+  """A decorator that counts how many times we executed a funciton.
+  In our case we uuse it ot track how many times we executed request()
+  to do not exceed API 1000resuests/hour limit. When we aproach
+  the limit functino automatically time sleeps.   
+  """
+  @wraps(func)  
   def wrapper(*args, **kwargs):
     wrapper.count += 1
 
