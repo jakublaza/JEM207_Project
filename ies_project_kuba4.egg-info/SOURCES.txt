@@ -1,0 +1,8 @@
+LICENSE.txt
+README.md
+pyproject.toml
+setup.py
+ies_project_kuba4.egg-info/PKG-INFO
+ies_project_kuba4.egg-info/SOURCES.txt
+ies_project_kuba4.egg-info/dependency_links.txt
+ies_project_kuba4.egg-info/top_level.txt
