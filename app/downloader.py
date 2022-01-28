@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import date, datetime
 from functools import wraps
-import pkg_resources
+import importlib_resources
 import requests 
 import time
 import sys
@@ -13,10 +13,12 @@ token = "8a0ff681501b0bac557bf90fe6a036f7"
 #8a0ff681501b0bac557bf90fe6a036f7
 
 def counter(func):
-  """A decorator that counts how many times we executed a funciton.
+  """
+  A decorator that counts how many times we executed a funciton.
   In our case we use it to track how many times we executed request()
   to do not exceed API 1000 requests/hour limit. When we aproach
   the limit functino automatically time sleeps.   
+
   """
   @wraps(func)  
   def wrapper(*args, **kwargs):
@@ -42,20 +44,26 @@ def counter(func):
 
 @counter
 def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end_date = "24.12.2021", pause = 0.1):
-    """Request data from API and returs the response in json. The data in API are bounded to pages, 
+    """
+
+    Request data from API and returs the response in json. The data in API are bounded to pages, 
     one request obtains data for onepage (5000 rows)
     Parameters
     ----------
     token : str
         input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
+
     page : int
         specifies page which will be downloaded (default 1)
+
     items_per_page : int
         number of rows per page (defualt 5000)
     start_date = str
         begining date of the dataset - datum in format "dd.mm.YYYY" (default is "1.1.2020")
+
     end_date = str
         end date of the dataset - datum in format "dd.mm.YYYY" (default is "24.12.2021")
+        
     pause : int
         to not overload the API (default 0.1)
     
@@ -67,6 +75,7 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
     -------
     r
         response of the API, in json
+
     """
 
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page={a}&itemsPerPage={b}&datum%5Bbefore%5D={d}&datum%5Bafter%5D={c}".format(a = page, b = items_per_page, c = start_date, d = end_date)
@@ -93,20 +102,27 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
     return r               
 
 def get_total_pages(token, start_date = "1.1.2020", end_date = "24.12.2021"):
-    """Indetify how much pages needs to be downloaded to download whole dataset for given 
+    """
+
+    Indetify how much pages needs to be downloaded to download whole dataset for given 
     start date and date.
+
     Parameters
     ----------
     token : str
         input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
+
     start_date : str
         begining date of the dataset - datum in format "dd.mm.YYYY" (default is "1.1.2020")
+
     end_date : str
         end date of the dataset - datum in format "dd.mm.YYYY" (default is "24.12.2021")
+
     Returns
     -------
     total_pages : int
         total number of pages for given period
+
     """
     r = request(token, start_date = start_date, end_date = end_date)
     total_pages = int(r.json()["hydra:view"]["hydra:last"].split("=")[-1])
@@ -114,19 +130,26 @@ def get_total_pages(token, start_date = "1.1.2020", end_date = "24.12.2021"):
     return total_pages
 
 def get_total_items(token, start_date = "1.1.2020", end_date = "24.12.2021"):
-    """Indetify how much rows is in the dataset for gievn start date and end date
+    """
+
+    Indetify how much rows is in the dataset for gievn start date and end date
+
     Parameters
     ----------
     token : str
         input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
+
     start_date = str
         begining date of the dataset - datum in format "dd.mm.YYYY" (default is "1.1.2020")
+
     end_date = str
         end date of the dataset - datum in format "dd.mm.YYYY" (default is "24.12.2021")
+
     Returns
     -------
     total_items : int
         total number of rows in dataset for given time period
+
     """
     r = request(token, start_date = start_date, end_date = end_date)
     total_items = int(r.json()['hydra:totalItems'])
@@ -157,18 +180,24 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
     ----------
     df : dataframe
         dataframe with covid data
+
     i : int
         a page where we curretly are 
+
     P : dic
         dictionary that stores duplicates P = {page:duplicates}
+
     start_date = str
         begining date of the dataset - datum in format "dd.mm.YYYY" (default is "1.1.2020")
+
     end_date = str
         end date of the dataset - datum in format "dd.mm.YYYY" (default is "24.12.2021")
+
     Returns
     -------
     df
         returns the dataframe hopefully with more rows
+
     """
     duplicates = pdf + 10000 - len(df) #if len(df), after download of two pages, did not increse by 10000 -> duplicates 
     print("duplicates: ", duplicates)
@@ -204,7 +233,9 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
     return df   
 
 def saving_interim_results(df, i):
-    """Saves partial downloads of the dataframe to your folder. The saving happens every 50 pages. 
+    """
+
+    Saves partial downloads of the dataframe to your folder. The saving happens every 50 pages. 
     It enables the code to run faster as when the part of the dataset is saved it is also drop. The data are
     saved as parquet with snappy compression, b/c it is fast to load. So we maximally
     work with df of length 280 000. And if your download is interapted you then do not need to start over again and 
@@ -212,8 +243,10 @@ def saving_interim_results(df, i):
     
     Parameters
     ----------
+
     df : dataframe
         dataframe with covid data
+
     i : int
         a page on which the download is
 
@@ -222,6 +255,7 @@ def saving_interim_results(df, i):
     df
         last 30000 rows of your dataframe (the dataframe is not drop entirely, b/c there might
         be duplicaes between pages, so 30000 rows are left) 
+
     """
     df.to_parquet('data{a}.parquet'.format(a = int(i/50)), compression = 'snappy')
     df = pd.read_parquet('data{a}.parquet'.format(a = int(i/50)), engine = 'fastparquet').iloc[-30000:] 
@@ -229,7 +263,9 @@ def saving_interim_results(df, i):
     return df
     
 def merging_interim_results(pages_total, intial_df = "1"):
-    """Merges all the interim results created by function saving_interim_results(df, i) into final data set. And attemps
+    """
+
+    Merges all the interim results created by function saving_interim_results(df, i) into final data set. And attemps
     to delete the interim results from your folder. We save the fianl dataset
     with .gzip compressino, which should be the best for space limition in parquet. 
     
@@ -237,6 +273,7 @@ def merging_interim_results(pages_total, intial_df = "1"):
     ----------
     pages_total : int
         total number of pages for given period
+
     intial_df : str
         a first interim result
 
@@ -244,6 +281,7 @@ def merging_interim_results(pages_total, intial_df = "1"):
     -------
     data
         the final downloaded dataset
+
     """
     L = list(range(2, int(pages_total/50) + 2)) #list of numbers of saved interim datasets
     data = pd.read_parquet('data{a}.parquet'.format(a = intial_df), engine = 'fastparquet')
@@ -260,8 +298,7 @@ def merging_interim_results(pages_total, intial_df = "1"):
 
 
 class Covid_Data:
-    """
-    A class used to manage covid data - storing, downloading and upadating
+    """A class used to manage covid data - storing, downloading and upadating
 
     ...
 
@@ -269,10 +306,13 @@ class Covid_Data:
     ----------
     data : pandas data frame
         data frame of the covid data
+
     info : dic
         dictionary of information regarding covid data in attribute data (total cases(rows), start_date, end_date)
+
     total_pages : int
         information regarding how pages needs to be requested from API (loads by calling method get_page(token, items_per_page = 5000))
+
     my_page : int
         states on what page is your data set, helpful when only fraction of data were donwloaded 
         (loads by calling method get_page(token, items_per_page = 5000))
@@ -281,12 +321,16 @@ class Covid_Data:
     -------
     get_info()
         loads info about the covid data in attribute data
+
     get_page(token, items_per_page = 5000)
         obtain info about how many pages were downloaded out of total pages (API send the data in pages)
+        
     downloader(token, start_page = 1, start_date = "1.1.2020", end_date = "24.12.2021", upd = "N")
         downloads covid data from API
+
     updater(token, end_date = date.today())
         updates covid data stored in attribute data
+
     """
     
     def __init__(self):
@@ -295,6 +339,7 @@ class Covid_Data:
         ----------
         data : int, dataframe
             if you already downloaded covid that then input the dataframe, otherwise input 0 - the data can be donwloaded by method download
+
         """
         print("Class initialize, if you want to load data provided by this package - use method load_data() \n \
                 or you can download it on your own using method download(*args, *kwargs) ")
@@ -310,8 +355,13 @@ class Covid_Data:
             self.get_info() 
     
     def load_data(self):
-        path = pkg_resources.resource_stream("src", 'data/datacovid.gzip')
-        self.data = pd.read_parquet(path, engine='fastparquet') 
+        """
+        loads data stored in package (from 1.3.2020 - 24.12.2021)
+
+        """
+        my_resources = importlib_resources.files("app") / "data" 
+        path = (str(my_resources) + "datacovid.bz2")
+        self.data = pd.read_pickle(path, compression='bz2') 
         print("Data loaded")
 
     
@@ -320,6 +370,7 @@ class Covid_Data:
         loads info about the covid data in attribute data
 
         if no data frame is loaded/downloaded yet it returns empty dictionary
+
         """
 
         self.info["total cases"] = len(self.data)
@@ -336,6 +387,7 @@ class Covid_Data:
         ----------
         token : str
             input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
+
         """
         self.total_pages = get_total_pages(token, start_date = self.info["start_date"], end_date = self.info["end_date"])
         self.my_page = int(len(self.data)/5000) + 1
@@ -349,15 +401,20 @@ class Covid_Data:
         ----------
         token : str
             input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
+
         start_page : int
             declare on page you want to start the download - if you begin then 1, if you already downloaded some part you can resume 
             but page where you stoped needs to be specialzed, it can be found out througt method get_page() (default is 1)
+
         start_date = str
             begining of the covid data - datum in format "dd.mm.YYYY" (default is "1.1.2020")
+
         end_date = str
             end of the covid data - datum in format "dd.mm.YYYY" (default is "24.12.2021")
+
         upd = str
             only used by updater, irelevant for you (default is "N")
+
         """
 
         if start_page == 1: #if you begin your download
@@ -419,6 +476,7 @@ class Covid_Data:
             input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
         end_date : str, datetime
             until what date you want to update the date (default date.today())
+
         """
         if isinstance(end_date, str): #we need correct format of date in string
             try:

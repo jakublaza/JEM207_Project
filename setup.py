@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ies_project-kuba10",
+    name="ies_project-kuba25",
     version="0.0.4",
     author="Jakub Láža",
     author_email="jakub.laza23@gmail.com",
@@ -18,10 +18,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    include_package_data=True,
-    package_data={"my_package": ['data/jojo.bz2']},
-    packages=setuptools.find_packages(),
-    data_files=[('app', ['data/jojo.bz2'])],
+    packages=[ "app"],
+    package_dir={'app':'app'},
+    package_data={'app': ['data/jojo.bz2'], "app": ["data/map/*"]},
     python_requires=">=3.6",
 )
 
