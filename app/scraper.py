@@ -3,7 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import unicodedata
 from src.district_map import districts
-
+import importlib_resources
 
 
 
@@ -25,3 +25,8 @@ df = pd.DataFrame(f).transpose()
 df.columns = ['Total', 'Men', 'Women']
 
 data = districts.merge(df, left_on = "NAMN", right_index = True, how = "left")
+
+def func():
+    my_resources = importlib_resources.files("app") / "data" 
+    path = (str(my_resources) + "jojo.gzip")
+    print(path)
