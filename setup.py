@@ -4,8 +4,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="Project Python IES",
-    version="0.0.2",
+    name="ies_project-kuba25",
+    version="0.0.4",
     author="Jakub Láža",
     author_email="jakub.laza23@gmail.com",
     description="A small package for IES JEM 207 Project",
@@ -18,7 +18,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages=[ "app"],
+    package_dir={'app':'app'},
+    package_data={'app': ['data/jojo.bz2'], "app": ["data/map/*"]},
     python_requires=">=3.6",
 )
+
