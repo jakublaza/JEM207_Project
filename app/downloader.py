@@ -341,8 +341,7 @@ class Covid_Data:
             if you already downloaded covid that then input the dataframe, otherwise input 0 - the data can be donwloaded by method download
 
         """
-        print("Class initialize, if you want to load data provided by this package - use method load_data() \n \
-                or you can download it on your own using method download(*args, *kwargs) \n You can access documentation at: "+str(importlib_resources.files("app"))+"/docs/_build/html/index.html")
+        print("Class initialize, if you want to load data provided by this package - use method load_data() or you can download it on your own using method download(*args, *kwargs) \n You can access documentation at: "+str(importlib_resources.files("app"))+"/docs/_build/html/index.html")
         self.data = 0
         self.info = {"total cases": [], 
                      "start_date": [],
@@ -362,6 +361,7 @@ class Covid_Data:
         my_resources = importlib_resources.files("app") 
         path = (str(my_resources) + "/data/datacovid.bz2")
         self.data = pd.read_pickle(path, compression='bz2') 
+        self.get_info() 
         print("Data loaded")
 
     
