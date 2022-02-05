@@ -12,15 +12,14 @@
 #
 import os
 import sys
-
-sys.path.insert(0, os.path.abspath('..'))
-
+sys.path.insert(0, os.path.abspath("../.."))
+print(sys.executable)
 
 # -- Project information -----------------------------------------------------
 
-project = 'MY'
-copyright = '2022, Jakub Láža'
-author = 'Jakub Láža'
+project = 'IES Python Covid Project'
+copyright = '2022, Jakub Láža and Dominik Čoupek'
+author = 'Jakub Láža and Dominik Čoupek'
 
 # The full version, including alpha/beta/rc tags
 release = '1'
@@ -31,7 +30,11 @@ release = '1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc"
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.coverage",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

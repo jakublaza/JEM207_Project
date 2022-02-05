@@ -25,7 +25,7 @@ def counter(func):
     wrapper.count += 1
 
     if wrapper.count == 2:
-        global start 
+        global start #we like to live dangerously ;) (it is neccessary here to have global var; otherwise it would not be recognized at line 32)
         start = time.time()
 
     if wrapper.count == 998:
@@ -81,11 +81,11 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page={a}&itemsPerPage={b}&datum%5Bbefore%5D={d}&datum%5Bafter%5D={c}".format(a = page, b = items_per_page, c = start_date, d = end_date)
     r = requests.get(url, {"apiToken": token})
     
-    if r.status_code == 200:
+    if r.status_code == 200: 
         None
     
-    elif r.status_code == 429:
-        msg = r.json()["message"]
+    elif r.status_code == 429: #API limit per request reached
+        msg = r.json()["message"] #shows message with info about when next request can be made
         t = "".join(a for a in msg if a.isdigit())
         print("Holy Moly! You exceeded the requests limit per hour, now you need to wait " + t + " seconds...")
         time.sleep(int(t)+60)
@@ -94,7 +94,7 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
         start = time.time()
         
         r = request(token, page)
-    else:
+    else: #In case of different errors
         raise Exception("Status code: " + r.status_code, "Error message: " + r.text, "Stopped on page: " + str(page))
     
     time.sleep(pause)
@@ -208,7 +208,7 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
         m = 1 # defiend to prevent infinite while loop
         while duplicates > 0: #should handle missing values due to duplicates
             
-            if m == 8:
+            if m == 8: #stops, if it does not find it can still happen that whole dataset will be downloaded (sometimes it finds more than is the actual number of duplicates)
                 print("unsuccesful", i)
                 P[i] = duplicates
                 break                       
@@ -218,8 +218,8 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
                     df = df.merge(pd.DataFrame.from_dict(e.json()["hydra:member"]), how = "outer").drop_duplicates()
                     duplicates = pdf + 10000 - len(df)
                     print("small", duplicates)        
-            else:
-                for n in range(max(int(i/2) - 1, 1), int(i/2) + 1): #harder force 10000 rows per page
+            else: #harder force 10000 rows per page
+                for n in range(max(int(i/2) - 1, 1), int(i/2) + 1): 
                     e = request(token, n, 10000, start_date = start_date, end_date = end_date)
                     df = df.merge(pd.DataFrame.from_dict(e.json()["hydra:member"]), how = "outer").drop_duplicates()
                     duplicates = pdf + 10000 - len(df)
@@ -286,7 +286,7 @@ def merging_interim_results(pages_total, intial_df = "1"):
     L = list(range(2, int(pages_total/50) + 2)) #list of numbers of saved interim datasets
     data = pd.read_parquet('data{a}.parquet'.format(a = intial_df), engine = 'fastparquet')
     
-    for j in L:
+    for j in L: 
         data = data.merge(pd.read_parquet('data{a}.parquet'.format(a = j), engine = 'fastparquet'), how = "outer")
         try:
             cwd = os.getcwd()
@@ -342,7 +342,7 @@ class Covid_Data:
 
         """
         print("Class initialize, if you want to load data provided by this package - use method load_data() \n \
-                or you can download it on your own using method download(*args, *kwargs) ")
+                or you can download it on your own using method download(*args, *kwargs) \n You can access documentation at: "+str(importlib_resources.files("app"))+"/docs/_build/html/index.html")
         self.data = 0
         self.info = {"total cases": [], 
                      "start_date": [],
@@ -359,8 +359,8 @@ class Covid_Data:
         loads data stored in package (from 1.3.2020 - 24.12.2021)
 
         """
-        my_resources = importlib_resources.files("app") / "data" 
-        path = (str(my_resources) + "datacovid.bz2")
+        my_resources = importlib_resources.files("app") 
+        path = (str(my_resources) + "/data/datacovid.bz2")
         self.data = pd.read_pickle(path, compression='bz2') 
         print("Data loaded")
 
@@ -459,7 +459,7 @@ class Covid_Data:
         
         data = merging_interim_results(pages_total)
         
-        if upd == "N":
+        if upd == "N": #save with diff name if download
             data.to_parquet('datafinal{a}.gzip'.format(a = str("update"+upd)), compression = 'gzip') 
             self.data = data
         else:
@@ -499,7 +499,3 @@ class Covid_Data:
         
         self.get_info()
     
-
-#covid = Covid_Data()
-
-#covid.downloader(token)
