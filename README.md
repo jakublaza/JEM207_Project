@@ -1,3 +1,3 @@
-# JEM207_Project
+In Package Covid you can find our package including functions, a class and datasets. 
 
-Project for class JEM207 Data Processing in Python at IES FSV UK.
+In Jupyter Notebook is jupyter notebook with analysis using package Covid.
