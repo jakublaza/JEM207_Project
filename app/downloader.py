@@ -4,7 +4,6 @@ from functools import wraps
 import importlib_resources
 import requests 
 import time
-import sys
 import os
 import io
 
@@ -25,7 +24,7 @@ def counter(func):
     wrapper.count += 1
 
     if wrapper.count == 2:
-        global start 
+        global start #we like to live dangerously ;) (it is neccessary here to have global var; otherwise it would not be recognized at line 32)
         start = time.time()
 
     if wrapper.count == 998:
@@ -81,11 +80,11 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/osoby?page={a}&itemsPerPage={b}&datum%5Bbefore%5D={d}&datum%5Bafter%5D={c}".format(a = page, b = items_per_page, c = start_date, d = end_date)
     r = requests.get(url, {"apiToken": token})
     
-    if r.status_code == 200:
+    if r.status_code == 200: 
         None
     
-    elif r.status_code == 429:
-        msg = r.json()["message"]
+    elif r.status_code == 429: #API limit per request reached
+        msg = r.json()["message"] #shows message with info about when next request can be made
         t = "".join(a for a in msg if a.isdigit())
         print("Holy Moly! You exceeded the requests limit per hour, now you need to wait " + t + " seconds...")
         time.sleep(int(t)+60)
@@ -94,7 +93,7 @@ def request(token, page = 1, items_per_page = 5000, start_date = "1.1.2020", end
         start = time.time()
         
         r = request(token, page)
-    else:
+    else: #In case of different errors
         raise Exception("Status code: " + r.status_code, "Error message: " + r.text, "Stopped on page: " + str(page))
     
     time.sleep(pause)
@@ -166,7 +165,7 @@ def get_vacination():
     
     return csv_df
 
-def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.12.2021"):
+def duplicates_handling(df, i, P, pdf, total_len, start_date = "1.1.2020", end_date = "24.12.2021"):
     """Search for values that were not downloaded due to duplicates. 
     
     The API provides data based on pages - each pages can contain only certain amount of rows (in our case 5000). But we are
@@ -200,7 +199,7 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
 
     """
     duplicates = pdf + 10000 - len(df) #if len(df), after download of two pages, did not increse by 10000 -> duplicates 
-    print("duplicates: ", duplicates)
+    #print("duplicates: ", duplicates)
     
     if duplicates > 0:
         print("Handling duplicates...")
@@ -208,22 +207,26 @@ def duplicates_handling(df, i, P, pdf, start_date = "1.1.2020", end_date = "24.1
         m = 1 # defiend to prevent infinite while loop
         while duplicates > 0: #should handle missing values due to duplicates
             
-            if m == 8:
-                print("unsuccesful", i)
-                P[i] = duplicates
+            if m == 8: #stops, if it does not find it can still happen that whole dataset will be downloaded (sometimes it finds more than is the actual number of duplicates)
+                if total_len + 10000 - duplicates > i * 5000:
+                    print("succesful")
+                    P[i] = duplicates
+                else:
+                    print("unsucceseful")
+                    P[i] = duplicates
                 break                       
             elif m % 2 == 0: #softer force, 5000 rows per page
                 for j in range(max(i - 2, 1), i + 1):
                     e = request(token, j, start_date = start_date, end_date = end_date)
                     df = df.merge(pd.DataFrame.from_dict(e.json()["hydra:member"]), how = "outer").drop_duplicates()
                     duplicates = pdf + 10000 - len(df)
-                    print("small", duplicates)        
-            else:
-                for n in range(max(int(i/2) - 1, 1), int(i/2) + 1): #harder force 10000 rows per page
+                    #print("small", duplicates)        
+            else: #harder force 10000 rows per page
+                for n in range(max(int(i/2) - 1, 1), int(i/2) + 1): 
                     e = request(token, n, 10000, start_date = start_date, end_date = end_date)
                     df = df.merge(pd.DataFrame.from_dict(e.json()["hydra:member"]), how = "outer").drop_duplicates()
                     duplicates = pdf + 10000 - len(df)
-                    print("big", duplicates)
+                    #print("big", duplicates)
             m += 1
         
         if m < 5:
@@ -285,8 +288,9 @@ def merging_interim_results(pages_total, intial_df = "1"):
     """
     L = list(range(2, int(pages_total/50) + 2)) #list of numbers of saved interim datasets
     data = pd.read_parquet('data{a}.parquet'.format(a = intial_df), engine = 'fastparquet')
-    
-    for j in L:
+    cwd = os.getcwd()
+    os.remove(cwd + "/data{a}.parquet".format(a = 1))
+    for j in L: 
         data = data.merge(pd.read_parquet('data{a}.parquet'.format(a = j), engine = 'fastparquet'), how = "outer")
         try:
             cwd = os.getcwd()
@@ -341,8 +345,7 @@ class Covid_Data:
             if you already downloaded covid that then input the dataframe, otherwise input 0 - the data can be donwloaded by method download
 
         """
-        print("Class initialize, if you want to load data provided by this package - use method load_data() \n \
-                or you can download it on your own using method download(*args, *kwargs) ")
+        print("Class initialize, if you want to load data provided by this package - use method load_data() or you can download it on your own using method download(*args, *kwargs) You can access documentation at: "+str(importlib_resources.files("app"))+"/docs/_build/html/index.html")
         self.data = 0
         self.info = {"total cases": [], 
                      "start_date": [],
@@ -359,9 +362,10 @@ class Covid_Data:
         loads data stored in package (from 1.3.2020 - 24.12.2021)
 
         """
-        my_resources = importlib_resources.files("app") / "data" 
-        path = (str(my_resources) + "datacovid.bz2")
+        my_resources = importlib_resources.files("app") 
+        path = (str(my_resources) + "/data/datacovid.bz2")
         self.data = pd.read_pickle(path, compression='bz2') 
+        self.get_info() 
         print("Data loaded")
 
     
@@ -389,9 +393,11 @@ class Covid_Data:
             input token for the API - can be obatained here: https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet
 
         """
+
         self.total_pages = get_total_pages(token, start_date = self.info["start_date"], end_date = self.info["end_date"])
         self.my_page = int(len(self.data)/5000) + 1
-        print("You downloaded " + str(self.my_page) + " pages out of total " + str(self.total_pages) + " pages.")
+        self.to_update = get_total_pages(token, start_date = self.info["start_date"], end_date = date.today())
+        print("You downloaded " + str(self.my_page) + " pages out of total " + str(self.total_pages) + " pages. \nTo upadte your dataset to today date you need to get total: " + str(self.to_update)+ " pages")
 
     def downloader(self, token, start_page = 1, start_date = "1.1.2020", end_date = "24.12.2021", upd = "N"):
         """
@@ -442,31 +448,31 @@ class Covid_Data:
             df = df.merge(pd.DataFrame.from_dict(r.json()["hydra:member"]), how = "outer").drop_duplicates()
 
             if i % 2 == 0 or i == pages_total: #every second page we check for duplicates and display progress
-                df = duplicates_handling(df, i, P, pdf, start_date = start_date, end_date = end_date) 
+                df = duplicates_handling(df, i, P, pdf, total_len, start_date = start_date, end_date = end_date) 
                 total_len = i * 5000 - sum(P.values()) + pr_total_len
                 print("Currently on page " + str(i) + ". Progress: " + str(round((total_len/items_total) * 100, 1)) + " %.") 
-                print(total_len, i*5000, len(df))
+                #print(total_len, i*5000, len(df))
                 pdf = len(df)
 
             if i % 50 == 0: #every fifthy pages we save current dataset and drop it 
                             #(not whole, keep last 30000 row to check for possible duplicates between page 50 a 51, 100 101 and so on)
                 df = saving_interim_results(df, i)
                 pdf = 30000 #we load last 30000 rows to check for duplicates to previous pages 
-                print(len(df), i * 5000,  "ahead/behind: " + str(total_len - i*5000))
-                print(P)
+                #print(len(df), i * 5000,  "ahead/behind: " + str(total_len - i*5000))
+                #print(P)
 
         df.to_parquet('data{a}.parquet'.format(a = int(i/50)+1), compression = 'snappy')
         
         data = merging_interim_results(pages_total)
         
-        if upd == "N":
+        if upd == "N": #save with diff name if download
             data.to_parquet('datafinal{a}.gzip'.format(a = str("update"+upd)), compression = 'gzip') 
             self.data = data
         else:
             data.to_parquet('dataupdate.gzip', compression = 'gzip')
             return data
     
-    def updater(self, token, end_date = date.today()):
+    def updater(self, token, end_date = datetime.today()):
         """
         updates covid data from API
 
@@ -498,8 +504,7 @@ class Covid_Data:
         self.data.to_parquet('datafinal.gzip', compression = 'gzip')
         
         self.get_info()
-    
 
-#covid = Covid_Data()
+covid = Covid_Data()
 
-#covid.downloader(token)
+covid = covid.updater(token)
