@@ -1,0 +1,7 @@
+beautifulsoup4==4.10.0
+importlib_resources==5.4.0
+pandas==1.2.4
+requests==2.25.1
+pandas==1.2.4
+datetime==4.3
+importlib-resources==5.4.0

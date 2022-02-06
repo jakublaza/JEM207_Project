@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="IES_Project_Covid",
+    name="IES_Project_Covid10",
     version="1",
     author="Jakub Láža",
     author_email="jakub.laza23@gmail.com",
@@ -20,7 +20,7 @@ setuptools.setup(
     ],
     packages=["app"],
     package_dir={'app':'app'},
-    package_data={"app": ['data/datacovid.bz2', "data/map/*", "docs/_build/*"]}, 
+    package_data={"app": ['data/datacovid.bz2', "data/map/*", "docs/_build/*", "requirements.txt"]}, 
     python_requires=">=3.6",
 )
 
