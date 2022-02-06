@@ -20,7 +20,7 @@ setuptools.setup(
     ],
     packages=["app"],
     package_dir={'app':'app'},
-    package_data={"app": ['data/datacovid.bz2', "data/map/*", "docs/_build/*", "requirements.txt"]}, 
+    package_data={"app": ['data/datacovid.bz2', "data/map/*", "docs/_build/html/*", "requirements.txt"]}, 
     python_requires=">=3.6",
 )
 
