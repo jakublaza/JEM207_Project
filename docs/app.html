@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>app package &#8212; IES Python Covid Project 1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="app" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="app-package">
+<h1>app package<a class="headerlink" href="#app-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-app.downloader">
+<span id="app-downloader-module"></span><h2>app.downloader module<a class="headerlink" href="#module-app.downloader" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">Covid_Data</span></span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to manage covid data - storing, downloading and upadating</p>
+<dl class="py attribute">
+<p>Attributes</p>
+<p>…</p>
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#app.downloader.Covid_Data.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>data frame of the covid data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pandas data frame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.info">
+<span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#app.downloader.Covid_Data.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>dictionary of information regarding covid data in attribute data (total cases(rows), start_date, end_date)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dic</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.total_pages">
+<span class="sig-name descname"><span class="pre">total_pages</span></span><a class="headerlink" href="#app.downloader.Covid_Data.total_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>information regarding how pages needs to be requested from API (loads by calling method get_page(token, items_per_page = 5000))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.my_page">
+<span class="sig-name descname"><span class="pre">my_page</span></span><a class="headerlink" href="#app.downloader.Covid_Data.my_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>states on what page is your data set, helpful when only fraction of data were donwloaded
+(loads by calling method get_page(token, items_per_page = 5000))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<p>Methods</p>
+<p>…</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.get_info">
+<span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data.get_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads info about the covid data in attribute data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.get_page">
+<span class="sig-name descname"><span class="pre">get_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_per_page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.get_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data.get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>obtain info about how many pages were downloaded out of total pages (API send the data in pages)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.downloader">
+<span class="sig-name descname"><span class="pre">downloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'N'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.downloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data.downloader" title="Permalink to this definition">¶</a></dt>
+<dd><p>downloads covid data from API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.updater">
+<span class="sig-name descname"><span class="pre">updater</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">date.today()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.updater"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data.updater" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates covid data stored in attribute data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">downloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'N'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.downloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>downloads covid data from API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>str</em>) – input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a></p></li>
+<li><p><strong>start_page</strong> (<em>int</em>) – declare on page you want to start the download - if you begin then 1, if you already downloaded some part you can resume
+but page where you stoped needs to be specialzed, it can be found out througt method get_page() (default is 1)</p></li>
+<li><p><strong>str</strong> (<em>upd =</em>) – begining of the covid data - datum in format “dd.mm.YYYY” (default is “1.1.2020”)</p></li>
+<li><p><strong>str</strong> – end of the covid data - datum in format “dd.mm.YYYY” (default is “24.12.2021”)</p></li>
+<li><p><strong>str</strong> – only used by updater, irelevant for you (default is “N”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads info about the covid data in attribute data</p>
+<p>if no data frame is loaded/downloaded yet it returns empty dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">get_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.get_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>obtain info about how many pages were downloaded out of total pages (API send the data in pages)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>str</em>) – input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.downloader.Covid_Data.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.Covid_Data.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads data stored in package (from 1.3.2020 - 24.12.2021)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">updater</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.date(2022,</span> <span class="pre">2,</span> <span class="pre">4)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#Covid_Data.updater"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates covid data from API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>str</em>) – input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a></p></li>
+<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>datetime</em>) – until what date you want to update the date (default date.today())</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.counter">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#counter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.counter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator that counts how many times we executed a funciton.
+In our case we use it to track how many times we executed request()
+to do not exceed API 1000 requests/hour limit. When we aproach
+the limit functino automatically time sleeps.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.duplicates_handling">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">duplicates_handling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#duplicates_handling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.duplicates_handling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for values that were not downloaded due to duplicates.</p>
+<p>The API provides data based on pages - each pages can contain only certain amount of rows (in our case 5000). But we are
+downloading dataset with more than 2mil. rows, hence we need to download about 500 pages and merge them together.
+Unforunatelly, the data on each page are not exactly ordered and it may happend that same value is on page 1 and page 2,
+for example. In other words, the obervations are not entirely fixed to specific row, thus when we request for page 1 many time
+we do not get exactly the same results for each request. We solved it by indetifying if there was any duplicates and if yes,
+then we iterate for multiple times in neighbourhood of the page untill we get the missed values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>dataframe</em>) – dataframe with covid data</p></li>
+<li><p><strong>i</strong> (<em>int</em>) – a page where we curretly are</p></li>
+<li><p><strong>P</strong> (<em>dic</em>) – dictionary that stores duplicates P = {page:duplicates}</p></li>
+<li><p><strong>str</strong> (<em>end_date =</em>) – begining date of the dataset - datum in format “dd.mm.YYYY” (default is “1.1.2020”)</p></li>
+<li><p><strong>str</strong> – end date of the dataset - datum in format “dd.mm.YYYY” (default is “24.12.2021”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the dataframe hopefully with more rows</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.get_total_items">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">get_total_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#get_total_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.get_total_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indetify how much rows is in the dataset for gievn start date and end date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>str</em>) – input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a></p></li>
+<li><p><strong>str</strong> (<em>end_date =</em>) – begining date of the dataset - datum in format “dd.mm.YYYY” (default is “1.1.2020”)</p></li>
+<li><p><strong>str</strong> – end date of the dataset - datum in format “dd.mm.YYYY” (default is “24.12.2021”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>total_items</strong> – total number of rows in dataset for given time period</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.get_total_pages">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">get_total_pages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#get_total_pages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.get_total_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indetify how much pages needs to be downloaded to download whole dataset for given
+start date and date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>str</em>) – input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a></p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – begining date of the dataset - datum in format “dd.mm.YYYY” (default is “1.1.2020”)</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – end date of the dataset - datum in format “dd.mm.YYYY” (default is “24.12.2021”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>total_pages</strong> – total number of pages for given period</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.get_vacination">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">get_vacination</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#get_vacination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.get_vacination" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.merging_interim_results">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">merging_interim_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pages_total</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intial_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#merging_interim_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.merging_interim_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges all the interim results created by function saving_interim_results(df, i) into final data set. And attemps
+to delete the interim results from your folder. We save the fianl dataset
+with .gzip compressino, which should be the best for space limition in parquet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pages_total</strong> (<em>int</em>) – total number of pages for given period</p></li>
+<li><p><strong>intial_df</strong> (<em>str</em>) – a first interim result</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the final downloaded dataset</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.request">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_per_page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1.1.2020'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'24.12.2021'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request data from API and returs the response in json. The data in API are bounded to pages,
+one request obtains data for onepage (5000 rows)
+:param token: input token for the API - can be obatained here: <a class="reference external" href="https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet">https://onemocneni-aktualne.mzcr.cz/vytvorit-ucet</a>
+:type token: str
+:param page: specifies page which will be downloaded (default 1)
+:type page: int
+:param items_per_page: number of rows per page (defualt 5000)
+:type items_per_page: int
+:param start_date = str: begining date of the dataset - datum in format “dd.mm.YYYY” (default is “1.1.2020”)
+:param end_date = str: end date of the dataset - datum in format “dd.mm.YYYY” (default is “24.12.2021”)
+:param pause: to not overload the API (default 0.1)
+:type pause: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>Exception</strong> – if response of API is not 200 or 429.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>response of the API, in json</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>r</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.downloader.saving_interim_results">
+<span class="sig-prename descclassname"><span class="pre">app.downloader.</span></span><span class="sig-name descname"><span class="pre">saving_interim_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/downloader.html#saving_interim_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.downloader.saving_interim_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves partial downloads of the dataframe to your folder. The saving happens every 50 pages.
+It enables the code to run faster as when the part of the dataset is saved it is also drop. The data are
+saved as parquet with snappy compression, b/c it is fast to load. So we maximally
+work with df of length 280 000. And if your download is interapted you then do not need to start over again and
+can begin close to where you stoped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>dataframe</em>) – dataframe with covid data</p></li>
+<li><p><strong>i</strong> (<em>int</em>) – a page on which the download is</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>last 30000 rows of your dataframe (the dataframe is not drop entirely, b/c there might
+be duplicaes between pages, so 30000 rows are left)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.scraper">
+<span id="app-scraper-module"></span><h2>app.scraper module<a class="headerlink" href="#module-app.scraper" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.scraper.get_district_pop">
+<span class="sig-prename descclassname"><span class="pre">app.scraper.</span></span><span class="sig-name descname"><span class="pre">get_district_pop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/scraper.html#get_district_pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.scraper.get_district_pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scrapes czech statistical office for districts popultaion (Total, Men, Woman)</p>
+</dd></dl>
+
+</section>
+<section id="module-app">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">IES Python Covid Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">app package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">app</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">app</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Jakub Láža and Dominik Čoupek.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/app.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
